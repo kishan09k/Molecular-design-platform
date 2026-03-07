@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Molecular Design Platform — AI-powered molecular design, property prediction, and reaction simulation.">
+  <title>Molecular Design Platform</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <!-- App Config (injected by PHP) -->
+  <script>
+    window.APP_CONFIG = {
+      apiBase:  '/api',
+      version:  '1.0.0',
+      appName:  'Molecular Design Platform',
+    };
+  </script>
+</head>
+<body>
+
+<div class="app-shell" id="app">
+
+  <!-- ── Top Bar ───────────────────────────────────────── -->
+  <header class="topbar">
+    <a href="/" class="topbar__logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <circle cx="4"  cy="6"  r="2"/>
+        <circle cx="20" cy="6"  r="2"/>
+        <circle cx="4"  cy="18" r="2"/>
+        <circle cx="20" cy="18" r="2"/>
+        <line x1="12" y1="9"  x2="5.5"  y2="7"/>
+        <line x1="12" y1="9"  x2="18.5" y2="7"/>
+        <line x1="12" y1="15" x2="5.5"  y2="17"/>
+        <line x1="12" y1="15" x2="18.5" y2="17"/>
+      </svg>
+      MDP<span>·</span>Platform
+    </a>
+
+    <div class="flex items-center gap-3">
+      <span class="badge badge-primary" id="user-badge">Guest</span>
+      <button class="btn btn-outline btn-sm" id="btn-logout">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ── Sidebar ───────────────────────────────────────── -->
+  <nav class="sidebar">
+    <span class="nav-section-label">Workspace</span>
+    <button class="nav-item active" data-page="dashboard">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" data-page="editor">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="5" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="19"/><line x1="5" y1="12" x2="7" y2="12"/><line x1="17" y1="12" x2="19" y2="12"/></svg>
+      Molecule Editor
+    </button>
+    <button class="nav-item" data-page="reactions">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+      Reaction Builder
+    </button>
+    <button class="nav-item" data-page="library">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Compound Library
+    </button>
+
+    <span class="nav-section-label" style="margin-top:auto;">Projects</span>
+    <button class="nav-item" data-page="projects">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      My Projects
+    </button>
+    <button class="nav-item" data-page="reports">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+      Reports
+    </button>
+  </nav>
+
+  <!-- ── Main Content ──────────────────────────────────── -->
+  <main class="main-content" id="main-content">
+
+    <!-- Dashboard Page (default) -->
+    <section id="page-dashboard">
+      <div class="flex items-center justify-between" style="margin-bottom:1.5rem;">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="mt-1 text-sm">Welcome back. Here's your molecular research overview.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-new-molecule">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Molecule
+        </button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;">
+        <div class="card card--glow">
+          <div class="card__title">Molecules</div>
+          <div style="font-size:2rem;font-weight:700;font-family:var(--font-display);color:var(--color-primary-glow);margin-top:.5rem;" id="stat-molecules">—</div>
+          <div class="text-xs text-subtle mt-1">Saved compounds</div>
+        </div>
+        <div class="card card--glow">
+          <div class="card__title">Projects</div>
+          <div style="font-size:2rem;font-weight:700;font-family:var(--font-display);color:var(--color-accent);margin-top:.5rem;" id="stat-projects">—</div>
+          <div class="text-xs text-subtle mt-1">Active workspaces</div>
+        </div>
+        <div class="card card--glow">
+          <div class="card__title">Reactions</div>
+          <div style="font-size:2rem;font-weight:700;font-family:var(--font-display);color:var(--color-accent-2);margin-top:.5rem;" id="stat-reactions">—</div>
+          <div class="text-xs text-subtle mt-1">Simulations run</div>
+        </div>
+        <div class="card card--glow">
+          <div class="card__title">Avg. QED</div>
+          <div style="font-size:2rem;font-weight:700;font-family:var(--font-display);color:var(--color-success);margin-top:.5rem;" id="stat-qed">—</div>
+          <div class="text-xs text-subtle mt-1">Drug-likeness score</div>
+        </div>
+      </div>
+
+      <!-- Quick Predict Panel -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card__header">
+          <h3 class="card__title">⚡ Quick Predict</h3>
+          <span class="badge badge-primary">RDKit + ML</span>
+        </div>
+        <div class="flex gap-3 items-center">
+          <input
+            type="text"
+            class="form-input form-input--mono"
+            id="quick-smiles"
+            placeholder="Enter SMILES… e.g. CC(=O)Oc1ccccc1C(=O)O"
+            style="flex:1;"
+          />
+          <button class="btn btn-primary" id="btn-quick-predict">
+            Predict Properties
+          </button>
+        </div>
+        <div id="quick-results" class="property-grid mt-4" style="display:none;"></div>
+        <div id="quick-loader" class="flex items-center gap-2 mt-4" style="display:none;">
+          <div class="spinner"></div>
+          <span class="text-sm text-muted">Running ML pipeline…</span>
+        </div>
+      </div>
+
+      <!-- Recent Molecules Table -->
+      <div class="card">
+        <div class="card__header">
+          <h3 class="card__title">Recent Molecules</h3>
+          <button class="btn btn-ghost btn-sm" id="btn-view-all">View All →</button>
+        </div>
+        <div id="recent-molecules-list">
+          <p class="text-muted text-sm">No molecules yet. Create your first compound above.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ── Scripts ────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/molecule-viewer.js"></script>
+<script src="js/property-charts.js"></script>
+<script src="js/api-client.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+// ─── Dashboard Page Logic ──────────────────────────────────────────────
+Router.register('dashboard', async () => {
+  document.getElementById('page-dashboard').style.display = 'block';
+
+  // Quick predict handler
+  document.getElementById('btn-quick-predict').addEventListener('click', async () => {
+    const smiles  = document.getElementById('quick-smiles').value.trim();
+    const results = document.getElementById('quick-results');
+    const loader  = document.getElementById('quick-loader');
+
+    if (!smiles) { Toast.warn('Please enter a SMILES string'); return; }
+
+    results.style.display = 'none';
+    loader.style.display  = 'flex';
+
+    try {
+      const mol   = await MoleculeService.create(smiles, '', null, '');
+      const props = await MoleculeService.getProperties(mol.id);
+      renderPropertyGrid(results, props);
+      results.style.display = 'grid';
+      Toast.success('Properties predicted!');
+    } catch (err) {
+      Toast.error(err.message ?? 'Prediction failed');
+    } finally {
+      loader.style.display = 'none';
+    }
+  });
+
+  // Load recent molecules
+  try {
+    const data = await MoleculeService.list(1, 5);
+    document.getElementById('stat-molecules').textContent = data.total ?? 0;
+  } catch (_) {}
+});
+</script>
+
+</body>
+</html>
